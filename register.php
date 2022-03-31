@@ -1,8 +1,54 @@
-<?php
-	include'config.php';
+<?php 
+
+include 'config.php';
+
+error_reporting(0);
+
+session_start();
+
+if (isset($_SESSION['username'])) {
+    header("Location: index.php");
+}
+
+if (isset($_POST['b'])) {
+	$username = $_POST['u'];
+	$email = $_POST['e'];
+	$password = ($_POST['p1']);
+	$cpassword = ($_POST['p2']);
+	if ($password == $cpassword) {
+		$sql = "SELECT * FROM users WHERE email='$email'";
+		$sql2 = "SELECT * FROM users WHERE uname='$username'";
+		$result = mysqli_query($conn, $sql);
+		$result2=mysqli_query($conn,$sql);
+	
+		if (!$result->num_rows > 0 && !$result->num_rows > 0) {
+			$sql = "INSERT INTO users (username, email, password)
+					VALUES ('$username', '$email', '$password')";
+			$result = mysqli_query($conn, $sql);
+			
+			if ($result) {
+				echo "<script>alert('User Registration Completed.')</script>";
+				$username = "";
+				$email = "";
+				$_POST['p1'] = "";
+				$_POST['p2'] = "";
+				
+			} else {
+				echo "<script>alert('Something Wrong Went.')</script>";
+			}
+		} else {
+			echo "<script>alert('Email Already Exists.')</script>";
+		}
+		
+	} else {
+		echo "<script>alert('Password Not Matched.')</script>";
+	}
+}
+
 ?>
 <!DOCTYPE html><html lang='en' class=''>
-<head><script src='//production-assets.codepen.io/assets/editor/live/console_runner-079c09a0e3b9ff743e39ee2d5637b9216b3545af0de366d4b9aad9dc87e26bfd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/events_runner-73716630c22bbc8cff4bd0f07b135f00a0bdc5d14629260c3ec49e5606f98fdd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/css_live_reload_init-2c0dc5167d60a5af3ee189d570b1835129687ea2a61bee3513dee3a50c115a77.js'></script><meta charset='UTF-8'><meta name="robots" content="noindex"><link rel="shortcut icon" type="image/x-icon" href="//production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /><link rel="mask-icon" type="" href="//production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" /><link rel="canonical" href="https://codepen.io/frytyler/pen/EGdtg" />
+<head>
+	<script src='//production-assets.codepen.io/assets/editor/live/console_runner-079c09a0e3b9ff743e39ee2d5637b9216b3545af0de366d4b9aad9dc87e26bfd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/events_runner-73716630c22bbc8cff4bd0f07b135f00a0bdc5d14629260c3ec49e5606f98fdd.js'></script><script src='//production-assets.codepen.io/assets/editor/live/css_live_reload_init-2c0dc5167d60a5af3ee189d570b1835129687ea2a61bee3513dee3a50c115a77.js'></script><meta charset='UTF-8'><meta name="robots" content="noindex"><link rel="shortcut icon" type="image/x-icon" href="//production-assets.codepen.io/assets/favicon/favicon-8ea04875e70c4b0bb41da869e81236e54394d63638a1ef12fa558a4a835f1164.ico" /><link rel="mask-icon" type="" href="//production-assets.codepen.io/assets/favicon/logo-pin-f2d2b6d2c61838f7e76325261b7195c27224080bc099486ddd6dccb469b8e8e6.svg" color="#111" /><link rel="canonical" href="https://codepen.io/frytyler/pen/EGdtg" />
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -76,8 +122,8 @@ input:focus { box-shadow: inset 0 -5px 45px rgba(100,100,100,0.4), 0 1px 1px rgb
 		<input type="Email" name="e" placeholder="Email" required="required" />
         <input type="password" name="p1" placeholder="Password" required="required" />
 		<input type="password" name="p2" placeholder="Confirm Password" required="required" />
-        <button type="submit" class="btn btn-primary btn-block btn-large">Login</button>
-		<p id="acc"> Already have an account?  <a href ="index.php">Login</a></p>
+        <button name="b" class="btn btn-primary btn-block btn-large">Register</button>
+		<p style="color : #2ecc71" > Already have an account?  <a href ="index.php">Login</a></p>
 	</form>
 </div>
 <script src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script>
